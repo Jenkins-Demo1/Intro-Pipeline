@@ -2,9 +2,6 @@ pipeline {
   agent {
     label 'jdk9'
   }
-   environment {
-      MY_NAME = 'Mary'
-  }
   stages {
     stage('Say Hello') {
       steps {
@@ -12,5 +9,8 @@ pipeline {
         sh 'java -version'
       }
     }
+  }
+  environment {
+    MY_NAME = 'Mary'
   }
 }
