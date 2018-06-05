@@ -2,7 +2,9 @@ pipeline {
   agent {
     label 'jdk9'
   }
-  stages {
+     environment {
+      MY_NAME = 'Mary'
+   }stages {
     stage('Say Hello') {
       steps {
         echo 'Hello World ${MY_NAME}!'
