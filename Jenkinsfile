@@ -1,37 +1,42 @@
 pipeline {
   agent {
-    label 'jdk9'
+    label 'jdk8'
   }
   stages {
     stage('Say Hello') {
       steps {
-        echo "Hello World ${MY_NAME}!"
+        echo "Hello ${params.Name}!"
         sh 'java -version'
         echo "${TEST_USER_USR}"
         echo "${TEST_USER_PSW}"
       }
     }
-    stage('Get Kernel') {
-      steps {
-        script {
-          try {
-            KERNEL_VERSION = sh (script: "uname -r", returnStdout: true)
-          } catch(err) {
-            echo "CAUGHT ERROR: ${err}"
-            throw err
+    stage('Testing') {
+      failFast true
+      parallel {
+        stage('Java 8') {
+          agent {
+            label 'jdk8'
+          }
+          steps {
+            sh 'java -version'
+            sleep(time: 10, unit: 'SECONDS')
           }
         }
-
-      }
-    }
-    stage('Say Kernel') {
-      steps {
-        echo "${KERNEL_VERSION}"
+        stage('Java 9') {
+          agent {
+            label 'jdk9'
+          }
+          steps {
+            sh 'java -version'
+            sleep(time: 20, unit: 'SECONDS')
+          }
+        }
       }
     }
   }
   environment {
-    MY_NAME = 'Mary'
+    MY_NAME = 'Ma}ry'
     TEST_USER = credentials('test-user')
   }
   post {
